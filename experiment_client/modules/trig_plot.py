@@ -15,11 +15,15 @@ def handle(endpoint: dict) -> dict:
     
     data_points = []
     
+    def custom(x):
+        return math.sin(x) * 2
+    
     func = None
     if name == "get_cos_data":
         func = math.cos
     elif name == "get_sin_data":
-        func = math.sin
+        # func = math.sin
+        func = custom
     else:
         return {"error": f"Unknown endpoint name: {name}"}
 
