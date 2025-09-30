@@ -1,25 +1,19 @@
 export default class ImageViewerWidget {
-    // We don't need to define static css because the widget is simple.
-    // However, we still need to fulfill the contract for the data key.
-    // The widget sends a request when the button is pressed, NOT on a timer.
-    // We still define a dataKey that is used when data eventually arrives.
-    // For this interactive widget, the loader's update cycle is manually triggered.
-    static dataKey = 'b64_image';
-
+    // The constructor and requestImage methods remain the same as before.
     constructor(canvas, config) {
         this.container = canvas.parentElement;
         canvas.remove();
-        this.config = config; // Store config for later use in fetching data
+        this.config = config;
         
         this.container.innerHTML = `
             <div style="padding: 10px;">
                 <p><strong>Client:</strong> ${config.dataSources[0].source.clientId}</p>
-                <input type="text" id="image-path-${config.id}" placeholder="Enter image path on client..." 
+                <input type="text" id="image-path-${config.id}" placeholder="Enter file path on client..." 
                        style="width: 70%; padding: 5px; margin-right: 10px;">
-                <button id="image-query-btn-${config.id}" style="padding: 5px 10px;">Load Image</button>
+                <button id="image-query-btn-${config.id}" style="padding: 5px 10px;">Load File</button>
                 <hr style="margin-top: 10px;">
                 <div id="image-display-${config.id}">
-                    <p>No image loaded.</p>
+                    <p>No file loaded.</p>
                 </div>
             </div>
         `;
@@ -28,15 +22,9 @@ export default class ImageViewerWidget {
         this.displayArea = this.container.querySelector(`#image-display-${config.id}`);
         this.queryButton = this.container.querySelector(`#image-query-btn-${config.id}`);
 
-        // Set up the event listener for the button click
         this.queryButton.addEventListener('click', this.requestImage.bind(this));
-        
-        // Disable the automatic polling timer for this widget
-        // We will manually trigger the request.
-        this.originalInterval = config.refreshInterval;
     }
 
-    // This method is called manually by the button click
     async requestImage() {
         const path = this.inputField.value.trim();
         if (!path) {
@@ -44,38 +32,33 @@ export default class ImageViewerWidget {
             return;
         }
 
-        // Disable button to prevent double-click
         this.queryButton.disabled = true;
         this.queryButton.textContent = 'Loading...';
-        this.displayArea.innerHTML = '<p>Requesting image...</p>';
+        this.displayArea.innerHTML = '<p>Requesting file...</p>';
 
-        // 1. Construct the URL based on the stored config and the user's path
         const ds = this.config.dataSources[0];
         const endpointParams = new URLSearchParams(ds.source.endpoint);
-        endpointParams.set('path', path); // Add the user-specified path to the endpoint
-        endpointParams.set('name', 'read_image'); // Ensure the endpoint name is correct
+        endpointParams.set('path', path);
+        endpointParams.set('name', 'read_image');
         
         const url = `/data?client_id=${ds.source.clientId}&experiment=${ds.source.experiment}&${endpointParams.toString()}`;
 
         try {
-            // 2. Send the request to the relay
             const response = await fetch(url);
             const data = await response.json();
-
-            // 3. Process and display the response
-            this.update([data]); // Manually call update, passing data as an array
+            this.update([data]);
 
         } catch (error) {
             this.displayArea.innerHTML = `<p style="color: red;">Network Error: ${error.message}</p>`;
         } finally {
             this.queryButton.disabled = false;
-            this.queryButton.textContent = 'Load Image';
+            this.queryButton.textContent = 'Load File';
         }
     }
 
     /**
-     * The update method is called after a successful request (manual or automatic).
-     * @param {Array<object>} allData - An array containing the single response payload.
+     * The update method is now smarter. It checks the MIME type and either
+     * displays the image OR triggers a download.
      */
     update(allData) {
         const payload = allData[0];
@@ -85,24 +68,45 @@ export default class ImageViewerWidget {
             return;
         }
 
-        // 1. Extract the Base64 data and MIME type
         const b64Data = payload.b64_image;
         const mimeType = payload.mime_type || 'application/octet-stream';
-        const filename = payload.filename || 'image';
+        // Provide a default filename if the backend doesn't
+        const filename = payload.filename || 'downloaded_file';
 
         if (!b64Data) {
-            this.displayArea.innerHTML = `<p style="color: red;">Invalid response: No image data received.</p>`;
+            this.displayArea.innerHTML = `<p style="color: red;">Invalid response: No data received.</p>`;
             return;
         }
 
-        // 2. Construct the Data URL format: data:[<MIME-type>][;charset=<encoding>][;base64],<data>
         const dataUrl = `data:${mimeType};base64,${b64Data}`;
 
-        // 3. Render the image in the display area
-        this.displayArea.innerHTML = `
-            <p>File: <strong>${filename}</strong></p>
-            <img src="${dataUrl}" alt="${filename}" style="max-width: 100%; height: auto; border: 1px solid #ccc;">
-        `;
+        // --- THIS IS THE NEW LOGIC ---
+        // If it's a generic file type, trigger a download.
+        if (mimeType === 'application/octet-stream') {
+            // 1. Create a temporary anchor element in memory
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = filename; // This attribute triggers the download
+
+            // 2. Append to body, click it, and then remove it for cleanup
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // 3. Provide user feedback in the widget area
+            this.displayArea.innerHTML = `
+                <p>Download initiated for: <strong>${filename}</strong></p>
+                <p><small>(If the download didn't start, check your browser's security or pop-up settings.)</small></p>
+            `;
+        } else {
+            // Otherwise, it's a known image type, so display it.
+            // This is the original logic.
+            this.displayArea.innerHTML = `
+                <p>File: <strong>${filename}</strong></p>
+                <img src="${dataUrl}" alt="${filename}" style="max-width: 100%; height: auto; border: 1px solid #ccc;">
+            `;
+        }
+        // --- END OF NEW LOGIC ---
     }
 
     destroy() {
