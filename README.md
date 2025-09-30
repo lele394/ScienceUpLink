@@ -10,7 +10,7 @@ A lightweight, dependency-free monitoring platform for remote agents, built enti
 ![display](./image.png)
 
 
-## Documntation
+## Documentation
 
 Below is a list of ressources that may prove useful
 - [Experiment Modules](./Experiment_Module.md)
