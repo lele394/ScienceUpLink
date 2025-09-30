@@ -18,6 +18,49 @@
           }
         ],
         "refreshInterval": 1000
+      },
+            {
+        "id": "spacer-1",
+        "title": "",
+        "type": "spacer",
+        "refreshInterval": 9999999,
+        "dataSources": [
+          {
+            "dataKey": "ok",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "spacer",
+              "endpoint": { "name": "do_nothing" }
+            }
+          }
+        ]
+      },
+
+      {
+        "id": "widget-radial-cpu-classical",
+        "title": "Radial Core Monitor (Classical)",
+        "type": "radial-core-monitor",
+        "mode": "classical",
+        "refreshInterval": 2000,
+        "dataSources": [
+          {
+            "dataKey": "system_metrics",
+            "source": { "clientId": "test-client-1", "experiment": "system_monitor", "endpoint": { "name": "get_metrics" } }
+          }
+        ]
+      },
+      {
+        "id": "widget-radial-cpu-line",
+        "title": "Spider Web Core Monitor (Line)",
+        "type": "radial-core-monitor",
+        "mode": "line",
+        "refreshInterval": 2000,
+        "dataSources": [
+          {
+            "dataKey": "system_metrics",
+            "source": { "clientId": "test-client-1", "experiment": "system_monitor", "endpoint": { "name": "get_metrics" } }
+          }
+        ]
       }
     ]
   }

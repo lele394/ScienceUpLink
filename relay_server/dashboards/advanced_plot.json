@@ -1,0 +1,50 @@
+{
+  "dashboard_name": "Advanced Combo Plot",
+  "dashboard": {
+    "title": "Advanced Plotting Dashboard",
+    "widgets": [
+      {
+        "id": "widget-advanced-plot-1",
+        "title": "Sine Wave (Line) vs. Cosine Peaks (Scatter)",
+        "type": "advanced-plot",
+        "refreshInterval": 2000,
+        
+        "chartOptions": {
+          "xAxis": {
+            "title": "Angle (Radians) (log)",
+            "type": "logarithmic"
+          },
+          "yAxis": {
+            "title": "Amplitude",
+            "type": "linear"
+          }
+        },
+
+        "dataSources": [
+          {
+            "type": "line",
+            "label": "Sine Wave",
+            "color": "rgb(54, 162, 235)",
+            "dataKey": "points",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "line_trig",
+              "endpoint": { "name": "get_sin_line", "points": "100" }
+            }
+          },
+          {
+            "type": "scatter",
+            "label": "Cosine Peaks",
+            "color": "rgb(255, 99, 132)",
+            "dataKey": "points",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "trig_plot",
+              "endpoint": { "name": "get_cos_data", "points": "20" }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
