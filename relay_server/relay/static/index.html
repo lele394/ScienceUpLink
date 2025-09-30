@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Dashboard...</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f2f5; margin: 0; padding: 2em; }
+        h1 { color: #333; }
+        #widget-container { display: flex; flex-wrap: wrap; gap: 2em; }
+        .widget { background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 1em; min-width: 400px; flex: 1; }
+        .widget h2 { margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 0.5em; font-size: 1.2em; }
+        .content { min-height: 300px; }
+    </style>
+    <!-- 1. Include the CORE Chart.js library FIRST -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- 2. Include the Matrix Chart PLUGIN library SECOND -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@^2.0.1/dist/chartjs-chart-matrix.min.js"></script>
+</head>
+<body>
+    <header style="margin-bottom: 2em; display: flex; align-items: center; gap: 1em;">
+        <h1 id="dashboard-title" style="margin: 0;">Loading...</h1>
+        <div class="dashboard-selector-container">
+            <label for="dashboard-selector">Select Dashboard:</label>
+            <select id="dashboard-selector"></select>
+        </div>
+    </header>
+
+    <!-- <h1 id="dashboard-title">Loading...</h1> -->
+    <div id="widget-container"></div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+{
+  "dashboard_name": "Example dashboard",
+  "dashboard": {
+    "title": "Experiment Dashboard",
+    "widgets": [
+      {
+        "id": "widget-combined-scatter",
+        "title": "Combined Sine & Cosine Scatter",
+        "type": "scatter-plot",
+        "dataSources": [
+          {
+            "label": "Cosine",
+            "color": "#FF6384",
+            "dataKey": "points",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "trig_plot",
+              "endpoint": { "name": "get_cos_data", "points": "75" }
+            }
+          },
+          {
+            "label": "Sine",
+            "color": "#36A2EB",
+            "dataKey": "points",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "trig_plot",
+              "endpoint": { "name": "get_sin_data", "points": "75" }
+            }
+          }
+        ],
+        "refreshInterval": 2500
+      },
+      {
+        "id": "widget-heatmap",
+        "title": "Gaussian Heatmap",
+        "type": "heatmap",
+        "dataSources": [
+          {
+            "dataKey": "heatmap_data",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "gaussian_heatmap",
+              "endpoint": { "name": "get_heatmap", "size": "20" }
+            }
+          }
+        ],
+        "refreshInterval": 5000
+      },
+      {
+        "id": "widget-combined-line",
+        "title": "Combined Sine & Cosine Line",
+        "type": "line-plot",
+        "dataSources": [
+          {
+            "label": "Cosine",
+            "color": "rgb(255, 99, 132)",
+            "dataKey": "points",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "line_trig",
+              "endpoint": { "name": "get_cos_line", "points": "200" }
+            }
+          },
+          {
+            "label": "Sine",
+            "color": "rgb(54, 162, 235)",
+            "dataKey": "points",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "line_trig",
+              "endpoint": { "name": "get_sin_line", "points": "200" }
+            }
+          }
+        ],
+        "refreshInterval": 2500
+      },
+      {
+        "id": "spacer-1",
+        "title": "",
+        "type": "spacer",
+        "refreshInterval": 9999999,
+        "dataSources": [
+          {
+            "dataKey": "ok",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "spacer",
+              "endpoint": { "name": "do_nothing" }
+            }
+          }
+        ]
+      },
+      {
+        "id": "widget-system-monitor",
+        "title": "System Monitor",
+        "type": "system-monitor",
+        "dataSources": [
+          {
+            "dataKey": "system_metrics",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "system_monitor",
+              "endpoint": { "name": "get_metrics" }
+            }
+          }
+        ],
+        "refreshInterval": 2000
+      }
+    ]
+  }
+}

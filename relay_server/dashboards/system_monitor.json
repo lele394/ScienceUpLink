@@ -1,0 +1,24 @@
+{
+  "dashboard_name": "System & GPU Monitor",
+  "dashboard": {
+    "title": "Focused System & GPU Monitor",
+    "widgets": [
+      {
+        "id": "widget-system-monitor",
+        "title": "System Monitor",
+        "type": "system-monitor",
+        "dataSources": [
+          {
+            "dataKey": "system_metrics",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "system_monitor",
+              "endpoint": { "name": "get_metrics" }
+            }
+          }
+        ],
+        "refreshInterval": 1000
+      }
+    ]
+  }
+}
