@@ -12,14 +12,15 @@ import time
 from .common.framing import send_frame, recv_frame
 
 # --- Configuration ---
-RELAY_HOST = 'localhost'
-RELAY_PORT = 9001
+
 MODULE_DIR = os.path.join(os.path.dirname(__file__), '..', 'modules')
 
 class Client:
-    def __init__(self, client_id: str):
+    def __init__(self, client_id: str, RELAY_HOST: str, RELAY_PORT: int):
         self.client_id = client_id
         self._loaded_modules = {}
+        self.RELAY_HOST = RELAY_HOST
+        self.RELAY_PORT = RELAY_PORT
 
     def _load_module(self, name: str):
         if name in self._loaded_modules:
@@ -68,8 +69,8 @@ class Client:
     def run(self):
         while True:
             try:
-                sock = socket.create_connection((RELAY_HOST, RELAY_PORT))
-                print(f"Connected to relay at {RELAY_HOST}:{RELAY_PORT}")
+                sock = socket.create_connection((self.RELAY_HOST, self.RELAY_PORT))
+                print(f"Connected to relay at {self.RELAY_HOST}:{self.RELAY_PORT}")
                 
                 # Announce ourselves to the relay
                 hello_msg = {"type": "hello", "client_id": self.client_id}

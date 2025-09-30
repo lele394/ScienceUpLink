@@ -106,6 +106,40 @@
           }
         ],
         "refreshInterval": 2000
+      },
+
+      {
+        "id": "spacer-1",
+        "title": "",
+        "type": "spacer",
+        "refreshInterval": 9999999,
+        "dataSources": [
+          {
+            "dataKey": "ok",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "spacer",
+              "endpoint": { "name": "do_nothing" }
+            }
+          }
+        ]
+      },
+
+      {
+        "id": "widget-image-viewer",
+        "title": "Remote Image Viewer",
+        "type": "image-viewer",
+        "refreshInterval": 9999999,
+        "dataSources": [
+          {
+            "dataKey": "b64_image",
+            "source": {
+              "clientId": "test-client-1",
+              "experiment": "image_reader",
+              "endpoint": { "name": "read_image" }
+            }
+          }
+        ]
       }
     ]
   }
